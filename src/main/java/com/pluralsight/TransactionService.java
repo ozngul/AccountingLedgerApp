@@ -1,22 +1,49 @@
 package com.pluralsight;
+
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
-    // This class will take care of reading and writing transactions from/to our CSV file.
-    // Instead of writing file code everywhere, we organize it here — this makes our project clean and modular.
-    public class TransactionService {
+public class TransactionService {
+    private static final String FILE_PATH = "src/main/resources/transactions.csv";
 
-
-        // This method is supposed to read all the transactions from the CSV file
-        // and return them as a list of Transaction objects.
-        // Right now it's empty because we will build it later!
-        public List<Transaction> loadTransactions() {
-            // This method will load transactions from transactions.csv
-            return null; // (To be implemented tomorrow)
-        }
-
-        // This method will take a new Transaction and add it to the CSV file.
-        // Every time the user adds a deposit or payment, we call this method to save it.
-        public void saveTransaction(Transaction transaction) {
-
+    // Save a transaction to the CSV file
+    public void saveTransaction(Transaction transaction) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+            writer.write(transaction.toCSV());
+            writer.write(System.lineSeparator()); // platforma uygun yeni satır
+        } catch (IOException e) {
+            System.out.println("Error saving transaction: " + e.getMessage());
         }
     }
+
+    // Load all transactions from the CSV file
+    public List<Transaction> loadTransactions() {
+        List<Transaction> transactions = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length == 5) {
+                    Transaction transaction = new Transaction(
+                            parts[0], parts[1], parts[2], parts[3], Double.parseDouble(parts[4])
+                    );
+                    transactions.add(transaction);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading transactions: " + e.getMessage());
+        }
+        return transactions;
+    }
+
+    // Generate a Transaction object using current date/time and user input
+    public Transaction createTransaction(String description, String vendor, double amount) {
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.toLocalDate().toString();
+        String time = now.toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        return new Transaction(date, time, description, vendor, amount);
+    }
+}

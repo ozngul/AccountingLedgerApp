@@ -42,7 +42,10 @@ public class Transaction {
         public double getAmount() {
             return amount;
         }
-
+    // This method turns a transaction into a CSV string (used when saving to file)
+    public String toCSV() {
+        return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
+    }
         // For easy printing
         // When we print a Transaction (example: System.out.println(transaction)),
         // we want it to look nice and readable. This method tells Java exactly how to format the output.
