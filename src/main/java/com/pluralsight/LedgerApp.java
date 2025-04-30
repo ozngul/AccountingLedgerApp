@@ -46,9 +46,56 @@ public class LedgerApp {
 
                 case "L":
                     List<Transaction> all = service.loadTransactions();
-                    System.out.println("\n--- Ledger ---");
-                    for (Transaction t : all) {
-                        System.out.println(t);
+
+                    while (true) {
+                        System.out.println("\n--- Ledger Menu ---");
+                        System.out.println("A) All Transactions");
+                        System.out.println("D) Deposits Only");
+                        System.out.println("P) Payments Only");
+                        System.out.println("R) Reports (Search by Vendor)");
+                        System.out.println("H) Home");
+                        System.out.print("Select an option: ");
+                        String ledgerChoice = scanner.nextLine().trim().toUpperCase();
+
+                        switch (ledgerChoice) {
+                            case "A":
+                                for (Transaction t : all) {
+                                    System.out.println(t);
+                                }
+                                break;
+                            case "D":
+                                for (Transaction t : all) {
+                                    if (t.getAmount() > 0) {
+                                        System.out.println(t);
+                                    }
+                                }
+                                break;
+                            case "P":
+                                for (Transaction t : all) {
+                                    if (t.getAmount() < 0) {
+                                        System.out.println(t);
+                                    }
+                                }
+                                break;
+                            case "R":
+                                System.out.print("Enter vendor name to search: ");
+                                String vendorSearch = scanner.nextLine().trim().toLowerCase();
+                                for (Transaction t : all) {
+                                    if (t.getVendor().toLowerCase().contains(vendorSearch)) {
+                                        System.out.println(t);
+                                    }
+                                }
+                                break;
+                            case "H":
+                                // go back to main menu
+                                break;
+                            default:
+                                System.out.println("Invalid option.");
+                        }
+
+                        if (ledgerChoice.equals("H")) {
+                            break; // Exit ledger submenu
+                        }
                     }
                     break;
 
