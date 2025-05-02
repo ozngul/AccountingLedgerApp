@@ -3,14 +3,15 @@ package com.pluralsight;
 // Every time someone adds a deposit or makes a payment, we create a Transaction object.
 public class Transaction {
 
-    // These are the details we need to track for every transaction.
-    private String date;
-        private String time;
-        private String description;
-        private String vendor;
-        private double amount;
+    // This class represents a single transaction: deposit or payment
+    private String date;     // The date of the transaction (yyyy-MM-dd)
+        private String time; // The time of the transaction (HH:mm:ss)
+    private String description; // Short explanation of the transaction
+        private String vendor;   // Who is the transaction with
+        private double amount;   // Positive = deposit, Negative = payment
 
-        // This is the constructor — it helps us create a new Transaction easily
+
+    // This is the constructor — it helps us create a new Transaction easily
         public Transaction(String date, String time, String description, String vendor, double amount) {
             this.date = date;
             this.time = time;
@@ -19,11 +20,11 @@ public class Transaction {
             this.amount = amount;
         }
 
-        // Getters
-        // These are called "getter" methods — they let other parts of the code
-        // safely access the information inside a Transaction object.
 
-        public String getDate() {
+    // Getter methods for accessing transaction details
+
+
+    public String getDate() {
             return date;
         }
 
@@ -42,7 +43,7 @@ public class Transaction {
         public double getAmount() {
             return amount;
         }
-    // This method turns a transaction into a CSV string (used when saving to file)
+    // Format transaction data as a line for CSV file
     public String toCSV() {
         return date + "|" + time + "|" + description + "|" + vendor + "|" + amount;
     }
